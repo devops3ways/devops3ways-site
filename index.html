@@ -698,7 +698,10 @@
         </div>
       </div>
 
-      <form class="form" name="contact" netlify onsubmit="handleSubmit(event)">
+      <form class="form" name="contact" onsubmit="handleSubmit(event)">
+        <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY" />
+        <input type="hidden" name="subject" value="New message from devops3ways.com" />
+        <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off" />
         <div class="form-group">
           <label class="form-label" for="name">name</label>
           <input class="form-input" type="text" id="name" name="name" placeholder="Your name" required />
@@ -727,12 +730,36 @@
 </footer>
 
 <script>
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
+    const form = e.target;
     const status = document.getElementById('form-status');
-    status.style.display = 'block';
-    e.target.reset();
-    setTimeout(() => { status.style.display = 'none'; }, 5000);
+    const button = form.querySelector('button[type="submit"]');
+    const show = (text, ok) => {
+      status.textContent = text;
+      status.style.color = ok ? 'var(--green)' : '#e5484d';
+      status.style.display = 'block';
+      setTimeout(() => { status.style.display = 'none'; }, 5000);
+    };
+    button.disabled = true;
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: new FormData(form)
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        form.reset();
+        show("Message sent — we'll be in touch shortly.", true);
+      } else {
+        show('Something went wrong. Please try again or email hello@devops3ways.com.', false);
+      }
+    } catch (err) {
+      show('Network error. Please try again or email hello@devops3ways.com.', false);
+    } finally {
+      button.disabled = false;
+    }
   }
 </script>
 
