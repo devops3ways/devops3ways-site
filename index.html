@@ -699,7 +699,7 @@
       </div>
 
       <form class="form" name="contact" onsubmit="handleSubmit(event)">
-        <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY" />
+        <input type="hidden" name="access_key" value="eb565f78-924f-453a-9afb-0fcbe26c2b18" />
         <input type="hidden" name="subject" value="New message from devops3ways.com" />
         <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off" />
         <div class="form-group">
@@ -753,6 +753,7 @@
         form.reset();
         show("Message sent — we'll be in touch shortly.", true);
       } else {
+        console.error('Web3Forms error:', res.status, data.message);
         show('Something went wrong. Please try again or email hello@devops3ways.com.', false);
       }
     } catch (err) {
